@@ -4,10 +4,12 @@
 #include <stdlib.h>
 #include <vector>
 
+using namespace std;
+
 
 void creatAValidArrayAndSolutions(vector<vector<double>> &);
 long generateRandom(int start, int end);
-
+void printArray(vector<vector<double>> &);
 
 unsigned N;
 int main(int argc, const char **argv)
@@ -71,4 +73,18 @@ long generateRandom(int start, int end)
         exit(1);
     }
     return (rand() % (end + 1 - start) + start);
+}
+void printArray(vector<vector<double>> &arr)
+{
+    for (size_t i = 0; i < N; i++)
+    {
+        for (size_t k = 0; k < (N + 1); k++)
+        {
+            cout << arr[i][k] << "\t";
+        }
+
+        cout << endl;
+    }
+    cout << endl
+         << endl;
 }

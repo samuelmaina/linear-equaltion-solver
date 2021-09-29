@@ -5,11 +5,11 @@
 #include <vector>
 
 using namespace std;
-
-
+vector<double> solveLinearEquations(vector<vector<double>> &);
 void creatAValidArrayAndSolutions(vector<vector<double>> &);
-long generateRandom(int start, int end);
 void printArray(vector<vector<double>> &);
+bool confirmSolution(vector<double> &, vector<vector<double>> &);
+long generateRandom(int start, int end);
 
 unsigned N;
 int main(int argc, const char **argv)
@@ -87,4 +87,67 @@ void printArray(vector<vector<double>> &arr)
     }
     cout << endl
          << endl;
+}
+vector<double> solveLinearEquations(vector<vector<double>> &arr)
+{
+
+    vector<double> solutions(N, 0.0);
+    double pivotValue;
+    double rowValue;
+    double multiplier;
+    for (size_t pivot = 0; pivot < N; pivot++)
+    {
+
+        pivotValue = arr[pivot][pivot];
+        for (size_t row = pivot + 1; row < N; row++)
+        {
+            rowValue = arr[row][pivot];
+            multiplier = rowValue / pivotValue;
+            for (size_t column = pivot; column < N + 1; column++)
+            {
+                arr[row][column] -= arr[pivot][column] * multiplier;
+            }
+        }
+    }
+
+    for (int row = N - 1; row >= 0; row--)
+    {
+        solutions[row] = arr[row][N];
+        for (size_t column = N - 1; column > row; column--)
+        {
+            solutions[row] -= arr[row][column] * solutions[column];
+        }
+        solutions[row] /= arr[row][row];
+    }
+
+    return solutions;
+}
+
+bool confirmSolution(vector<double> &proposed_solution, vector<vector<double>> &arr)
+{
+    double tolerance;
+    if (N > 1000)
+    {
+        tolerance = 0.005;
+    }
+    else
+    {
+        tolerance = 0.000005;
+    }
+
+    for (size_t row = 0; row < N; row++)
+    {
+        double total = 0.0;
+        for (size_t column = 0; column < N; column++)
+        {
+            total += arr[row][column] * proposed_solution[column];
+        }
+
+        if (abs(arr[row][N] - total) >= tolerance)
+        {
+            std::cout << " at row " << row << " ,solution = " << arr[row][N] << "  but the value found is " << total << std::endl;
+            return false;
+        }
+    }
+    return true;
 }
